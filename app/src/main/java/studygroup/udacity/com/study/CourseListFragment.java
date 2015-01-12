@@ -132,15 +132,6 @@ public class CourseListFragment extends ListFragment {
 
         private static final String TAG = "CourseListTask";
 
-        @Override
-        protected void onPostExecute(Courses courses) {
-            //백그라운드 실행(doInBackground) 끝나면 실행하는 메소드
-            super.onPostExecute(courses);
-            adapter.setData(courses);
-            // courses 객체를 뿌려준다.
-            adapter.addAll(courses.courses);
-            // add해서 추가해준다.
-        }
 
         @Override
         protected Courses doInBackground(Void... params) { //백그라운드에서 실행
@@ -170,6 +161,16 @@ public class CourseListFragment extends ListFragment {
 
             return courses;
 
+        }
+
+        @Override
+        protected void onPostExecute(Courses courses) {
+            //백그라운드 실행(doInBackground) 끝나면 실행하는 메소드
+            super.onPostExecute(courses);
+            adapter.setData(courses);
+            // courses 객체를 뿌려준다.
+            adapter.addAll(courses.courses);
+            // add해서 추가해준다.
         }
     }
 
