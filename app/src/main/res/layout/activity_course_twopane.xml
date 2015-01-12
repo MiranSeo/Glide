@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/course_list"
-        android:name="studygroup.udacity.com.studyplanner.CourseListFragment"
+        android:name="studygroup.udacity.com.study.CourseListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

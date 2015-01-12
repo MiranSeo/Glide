@@ -1,4 +1,4 @@
-package studygroup.udacity.com.studyplanner;
+package studygroup.udacity.com.study;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import studygroup.udacity.com.studyplanner.data.CourseDummy;
+import studygroup.udacity.com.study.data.CourseDummy;
 
 /**
  * A fragment representing a single Course detail screen.

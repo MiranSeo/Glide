@@ -1,12 +1,29 @@
-package studygroup.udacity.com.studyplanner;
+package studygroup.udacity.com.study;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.os.AsyncTask;
+import android.util.Log;
 
-import studygroup.udacity.com.studyplanner.data.CourseDummy;
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import studygroup.udacity.com.study.data.CourseDummy;
+import studygroup.udacity.com.study.data.Courses;
 
 /**
  * A list fragment representing a list of Courses. This fragment
@@ -35,6 +52,8 @@ public class CourseListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
+    private CourseListAdapter adapter;
+    private ArrayList<Courses.Course> courses;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -46,6 +65,27 @@ public class CourseListFragment extends ListFragment {
          * Callback for when an item has been selected.
          */
         public void onItemSelected(String id);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.refresh, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.refresh) {
+            CourseListTask courseList;
+            courseList = new CourseListTask();
+            courseList.execute();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     /**
@@ -70,9 +110,10 @@ public class CourseListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         // TODO: replace with a real list adapter.
-        CourseListAdapter adapter = new CourseListAdapter(getActivity());
-        adapter.addAll(CourseDummy.ITEMS);
+        adapter = new CourseListAdapter(getActivity(), courses);
+        //adapter.addAll(CourseDummy.ITEMS);
         setListAdapter(adapter);
+        setHasOptionsMenu(true);
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -84,6 +125,54 @@ public class CourseListFragment extends ListFragment {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
     }
+
+
+
+    public class CourseListTask extends AsyncTask<Void, Void, Courses> {
+
+        private static final String TAG = "CourseListTask";
+
+        @Override
+        protected void onPostExecute(Courses courses) {
+            //백그라운드 실행(doInBackground) 끝나면 실행하는 메소드
+            super.onPostExecute(courses);
+            adapter.setData(courses);
+            // courses 객체를 뿌려준다.
+            adapter.addAll(courses.courses);
+            // add해서 추가해준다.
+        }
+
+        @Override
+        protected Courses doInBackground(Void... params) { //백그라운드에서 실행
+            Courses courses = null;
+            try {
+                URL url = new URL("https://www.udacity.com/public-api/v0/courses");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                InputStream stream = connection.getInputStream();
+                InputStreamReader reader = new InputStreamReader(stream);
+                Gson gson = new Gson();
+                courses = gson.fromJson(reader, Courses.class);
+                Log.v(TAG, "The length of course list: " + courses.courses.size());
+                Log.v(TAG, "The title" + courses.courses.get(0).title);
+                Log.v(TAG, "The teaser video url"
+                        + courses.courses.get(0).teaser_video.youtube_url);
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return courses;
+
+        }
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -145,3 +234,7 @@ public class CourseListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 }
+
+
+
+

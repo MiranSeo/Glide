@@ -1,4 +1,4 @@
-package studygroup.udacity.com.studyplanner;
+package studygroup.udacity.com.study;
 
 import android.content.Intent;
 import android.os.Bundle;

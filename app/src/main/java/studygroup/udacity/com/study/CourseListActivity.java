@@ -1,9 +1,9 @@
-package studygroup.udacity.com.studyplanner;
+package studygroup.udacity.com.study;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 
 
 /**
@@ -51,6 +51,12 @@ public class CourseListActivity extends ActionBarActivity
         }
 
         // TODO: If exposing deep links into your app, handle intents here.
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //getMenuInflater().inflate(R.menu.refresh, menu);
+        return true;
     }
 
     /**

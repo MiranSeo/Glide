@@ -1,4 +1,4 @@
-package studygroup.udacity.com.studyplanner.data;
+package studygroup.udacity.com.study.data;
 
 import java.util.ArrayList;
 import java.util.List;
